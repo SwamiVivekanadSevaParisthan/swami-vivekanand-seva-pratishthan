@@ -10,7 +10,7 @@ import './index.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/swami-vivekanand-seva-pratishthan">
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/admin" element={<Login />} />
