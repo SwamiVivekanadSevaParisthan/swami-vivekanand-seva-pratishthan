@@ -37,7 +37,7 @@ export default function App() {
   }, []);
 
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    return (localStorage.getItem('theme') as 'light' | 'dark') || 'light';
+    return (localStorage.getItem('theme') as 'light' | 'dark') || 'dark';
   });
 
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);

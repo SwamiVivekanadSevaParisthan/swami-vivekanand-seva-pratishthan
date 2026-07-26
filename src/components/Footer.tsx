@@ -29,7 +29,7 @@ export default function Footer({ lang, onNavigate, onDonateClick }: FooterProps)
               id="footer-brand"
             >
               <img
-                src="/logo.png?v=3"
+                src={`${import.meta.env.BASE_URL}logo.png?v=3`}
                 alt="Swami Vivekanand Seva Pratishthan Logo"
                 className="h-[56px] w-[56px] object-contain flex-shrink-0 pointer-events-none select-none"
                 referrerPolicy="no-referrer"

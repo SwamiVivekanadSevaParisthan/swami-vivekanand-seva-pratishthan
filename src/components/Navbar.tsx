@@ -101,7 +101,7 @@ useEffect(() => {
             id="brand-logo-button"
           >
             <img
-              src="/logo.png"
+              src={`${import.meta.env.BASE_URL}logo.png`}
               alt="Swami Vivekanand Seva Pratishthan Logo"
               className="lg:h-[64px] lg:w-[64px] object-contain flex-shrink-0 pointer-events-none select-none"
               referrerPolicy="no-referrer"
@@ -226,7 +226,7 @@ useEffect(() => {
               id="mob-logo-btn"
             >
               <img
-                src="/logo.png"
+                src={`${import.meta.env.BASE_URL}logo.png`}
                 alt="Swami Vivekanand Seva Pratishthan Logo"
                 className="h-[46px] w-[46px] sm:h-[54px] sm:w-[54px] object-contain pointer-events-none select-none"
                 referrerPolicy="no-referrer"

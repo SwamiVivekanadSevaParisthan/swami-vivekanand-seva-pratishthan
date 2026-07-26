@@ -183,7 +183,7 @@ export default function Hero({ lang, onDonateClick, onNavigate }: HeroProps) {
             className="flex justify-center mb-2"
           >
             <img
-              src="/logo.png?v=3"
+              src={`${import.meta.env.BASE_URL}logo.png?v=3`}
               alt="Swami Vivekanand Seva Pratishthan Logo"
               className="hero-logo h-[115px] w-auto max-w-full object-contain pointer-events-none select-none"
               referrerPolicy="no-referrer"
