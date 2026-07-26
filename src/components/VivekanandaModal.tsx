@@ -77,7 +77,7 @@ export default function VivekanandaModal({ isOpen, onClose, lang }: VivekanandaM
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={handleClose}
+            onClick={onClose}
             className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
           />
 
@@ -118,7 +118,7 @@ export default function VivekanandaModal({ isOpen, onClose, lang }: VivekanandaM
             <div className="flex-1 p-6 lg:p-8 overflow-y-auto flex flex-col justify-between max-h-[calc(90vh-180px)] lg:max-h-[85vh]">
               {/* Close Button */}
               <button
-                onClick={handleClose}
+                onClick={onClose}
                 className="absolute top-4 right-4 p-2 rounded-full hover:bg-bg-secondary text-text-tertiary hover:text-text-primary transition-colors border border-transparent hover:border-border-primary z-20 bg-bg-card/80 backdrop-blur-sm"
               >
                 <X size={20} />
@@ -177,7 +177,7 @@ export default function VivekanandaModal({ isOpen, onClose, lang }: VivekanandaM
               {/* Bottom Actions */}
               <div className="mt-8 pt-4 border-t border-border-primary flex justify-end">
                 <button
-                  onClick={handleClose}
+                  onClick={onClose}
                   className="px-5 py-2.5 rounded-xl bg-[#00828a] hover:bg-[#006e75] text-white text-xs font-mono font-bold tracking-wider uppercase shadow-md transition-all duration-200"
                 >
                   {content.close}

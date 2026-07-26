@@ -34,14 +34,19 @@ export default function NewsSection({ lang }: NewsSectionProps) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {NEWS.map((item, idx) => (
             <motion.article
-              key={item.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="group flex flex-col justify-between bg-bg-card border border-border-primary rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:border-gray-205 transition-all duration-300"
-              id={`blog-card-${item.id}`}
-            >
+  key={item.id}
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.6, delay: idx * 0.1 }}
+  className="group flex flex-col justify-between bg-bg-card border border-border-primary rounded-2xl overflow-hidden cursor-pointer"
+  id={`blog-card-${item.id}`}
+  onClick={() => {
+    if (item.id === "n3") {
+      window.open("/documents/svspdocuments.pdf", "_blank");
+    }
+  }}
+>
               <div>
                 {/* Photo aspect-[16/10] */}
                 <div className="relative aspect-[16/10] overflow-hidden bg-gray-255">
