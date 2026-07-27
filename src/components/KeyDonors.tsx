@@ -7,27 +7,27 @@ type Props = {
 export default function KeyDonors({ lang }: Props) {
   const donorLogos = [
     {
-      src: "/donors/bnpmindia-logo.png",
+      src: `${import.meta.env.BASE_URL}donors/bnpmindia-logo.png`,
       alt: "Bank Note Paper Mill India",
     },
     {
-      src: "/donors/karnatakaco-operationmilkfederationbelagavi.png",
+      src: `${import.meta.env.BASE_URL}donors/karnatakaco-operationmilkfederationbelagavi.png`,
       alt: "Nandini KMF",
     },
     {
-      src: "/donors/credai.png",
+      src: `${import.meta.env.BASE_URL}donors/credai.png`,
       alt: "CREDAI Belagavi",
     },
     {
-      src: "/donors/akxatech.png",
+      src: `${import.meta.env.BASE_URL}donors/akxatech.png`,
       alt: "AKXA Technologies",
     },
     {
-      src: "/donors/hnb_engineers_pvt_ltd_logo.png",
+      src: `${import.meta.env.BASE_URL}donors/hnb_engineers_pvt_ltd_logo.png`,
       alt: "HNB Engineers",
     },
     {
-      src: "/donors/polyhydron foundation.png",
+      src: `${import.meta.env.BASE_URL}donors/polyhydron foundation.png`,
       alt: "Polyhydron Foundation",
     },
   ];
