@@ -43,7 +43,10 @@ export default function NewsSection({ lang }: NewsSectionProps) {
   id={`blog-card-${item.id}`}
   onClick={() => {
     if (item.id === "n3") {
-      window.open("/documents/svspdocuments.pdf", "_blank");
+      window.open(
+  `${import.meta.env.BASE_URL}documents/svspdocuments.pdf`,
+  "_blank"
+     );
     }
   }}
 >
