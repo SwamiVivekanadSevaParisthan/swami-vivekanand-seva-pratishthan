@@ -8,17 +8,23 @@
   --text-secondary: #374151;
   --text-tertiary: #6b7280;
   --border-primary: #f1f5f9;
-  
+
   --transition-speed: 300ms;
+  --transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* html === :root, so we can safely reference the custom properties here */
 html {
-  background-color: #eef2f5;}
+  background-color: var(--bg-primary);
+}
+
 html.dark {
+  /* Solid fallback so translucent card/bg layers have something opaque behind them */
   background-color: #060c0e;
 }
 
-[data-theme="dark"], .dark {
+[data-theme="dark"],
+.dark {
   --bg-primary: rgba(12, 22, 26, 0.73);
   --bg-secondary: rgba(18, 28, 33, 0.68);
   --bg-card: rgba(20, 34, 41, 0.85);
@@ -32,7 +38,7 @@ html.dark {
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Playfair Display", ui-serif, Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
-  
+
   --color-bg-primary: var(--bg-primary);
   --color-bg-secondary: var(--bg-secondary);
   --color-bg-card: var(--bg-card);
@@ -42,25 +48,27 @@ html.dark {
   --color-border-primary: var(--border-primary);
 }
 
-/* Ensure smooth theme switching transition for critical visual properties */
-section, 
-div, 
-header, 
-footer, 
-span, 
-button, 
-input, 
-select, 
-textarea, 
-blockquote, 
-h1, h2, h3, h4, h5, h6, 
-p, 
-a {
-  transition-property: background-color, border-color, text-color, fill, stroke, color;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
+/* Smooth theme switching for color-related properties across the whole tree */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: var(--transition-easing);
+  transition-duration: var(--transition-speed);
 }
 
+/* Respect users who've asked for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Logo images should never inherit card/button chrome */
 .hero-logo,
 .navbar-logo img,
 img[src*="logo"] {
@@ -73,17 +81,16 @@ img[src*="logo"] {
   object-fit: contain;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
+/* Hide scrollbar (Chrome/Safari/Opera + IE/Edge/Firefox) */
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
-/* Hide scrollbar for IE, Edge and Firefox */
 .scrollbar-none {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Shimmer and Glowing text animation sweeping left-to-right */
+/* Shimmer / glowing text sweep */
 @keyframes shimmer-sweep {
   0% {
     background-position: -150% center;
@@ -116,7 +123,7 @@ img[src*="logo"] {
   text-shadow: 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-/* Aurora background styling */
+/* Aurora background canvas */
 .aurora-container {
   width: 100%;
   height: 100%;
@@ -126,11 +133,12 @@ img[src*="logo"] {
   width: 100%;
   height: 100%;
 }
- @keyframes marquee {
+
+/* Infinite marquee */
+@keyframes marquee {
   0% {
     transform: translateX(0%);
   }
-
   100% {
     transform: translateX(-50%);
   }
@@ -145,4 +153,3 @@ img[src*="logo"] {
 .animate-marquee:hover {
   animation-play-state: paused;
 }
-
