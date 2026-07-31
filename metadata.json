@@ -2,5 +2,5 @@
   "name": "Swami Vivekanand Seva Pratishthan",
   "description": "A premium, fully localized, and trustworthy website frontend for Swami Vivekanand Seva Pratishthan trust in Belagavi, Karnataka.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }
