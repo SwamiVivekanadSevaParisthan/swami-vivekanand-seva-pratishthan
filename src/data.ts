@@ -167,6 +167,8 @@ export const TRANSLATIONS: Record<string, Record<Lang, string>> = {
   donate_frequency_monthly: { EN: 'Monthly Guardian', HI: 'मासिक अभिभावक', KN: 'ಮಾಸಿಕ ರಕ್ಷಕ', MR: 'मासिक पालकत्व' },
   donate_now_button: { EN: 'Sponsor This Now', HI: 'इसे अभी प्रायोजित करें', KN: 'ಈಗಲೇ ಪ್ರಾಯೋಜಿಸಿ', MR: 'आता प्रायोजित करा' },
   donate_custom_placeholder: { EN: 'Enter custom amount', HI: 'कस्टम राशि दर्ज करें', KN: 'ಕಸ್ಟಮ್ ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿ', MR: 'इतर रक्कम प्रविष्ट करा' },
+  
+  facebook_feed_title: { EN: 'Follow Us on Facebook', HI: 'फेसबुक पर हमें फॉलो करें', KN: 'ಫೇಸ್‌ಬುಕ್‌ನಲ್ಲಿ ನಮ್ಮನ್ನು ಅನುಸರಿಸಿ', MR: 'फेसबुकवर आमचे अनुसरण करा' },
 
   // Newsletter Section
   newsletter_title: { 
