@@ -21,8 +21,8 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
     const updateWidth = () => {
       if (containerRef.current) {
         const containerWidth = containerRef.current.offsetWidth;
-        // FB plugin has a hard minimum around 180 and looks best capped at ~600
-        const clamped = Math.min(Math.max(containerWidth, 280), 600);
+        // FB plugin looks fine well beyond 600px now that we're going full width
+        const clamped = Math.min(Math.max(containerWidth, 280), 1200);
         setWidth(clamped);
       }
     };
@@ -66,14 +66,13 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
       }
     };
 
-    // Small delay so the div has the new data-width attribute before FB reads it
     const timer = setTimeout(loadOrParse, 50);
     return () => clearTimeout(timer);
   }, [width]);
 
   return (
     <section id="facebook-feed" className="bg-bg-primary py-20 sm:py-28">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl sm:text-4xl font-sans font-black tracking-tight text-text-primary mb-8">
           {t('facebook_feed_title')}
         </h2>
