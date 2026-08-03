@@ -13,6 +13,7 @@ import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
 import AdoptModal from './components/AdoptModal';
 import { Lang } from './types';
+import FacebookFeed from './components/FacebookFeed';
 import Aurora from './components/ui/Aurora';
 import { CustomCursor } from './components/ui/CustomCursor';
 import FadeInSection from './components/ui/FadeInSection';
@@ -219,7 +220,10 @@ export default function App() {
             onDonateClick={() => triggerDonate()}
           />
         </FadeInSection>
-
+        {/* 3b. Live Facebook page feed */}
+        <FadeInSection>
+          <FacebookFeed lang={lang} />
+        </FadeInSection>
         {/* 4. Interactive Donation Impact board */}
         <FadeInSection>
           <section id="donation-impact">
