@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { Lang } from '../types';
 import { TRANSLATIONS } from '../data';
 
@@ -14,81 +14,45 @@ interface FacebookFeedProps {
 
 export default function FacebookFeed({ lang }: FacebookFeedProps) {
   const t = (key: string) => TRANSLATIONS[key]?.[lang] || key;
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(500);
 
   useEffect(() => {
-    const updateWidth = () => {
-      if (containerRef.current) {
-        const containerWidth = containerRef.current.offsetWidth;
-        // FB plugin looks fine well beyond 600px now that we're going full width
-        const clamped = Math.min(Math.max(containerWidth, 280), 1200);
-        setWidth(clamped);
-      }
-    };
+    if (window.FB) {
+      window.FB.XFBML.parse();
+      return;
+    }
 
-    updateWidth();
+    if (!document.getElementById('fb-root')) {
+      const fbRoot = document.createElement('div');
+      fbRoot.id = 'fb-root';
+      document.body.prepend(fbRoot);
+    }
 
-    let resizeTimeout: ReturnType<typeof setTimeout>;
-    const handleResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(updateWidth, 200);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(resizeTimeout);
-    };
+    if (!document.getElementById('facebook-jssdk')) {
+      const script = document.createElement('script');
+      script.id = 'facebook-jssdk';
+      script.async = true;
+      script.defer = true;
+      script.crossOrigin = 'anonymous';
+      script.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0';
+      document.body.appendChild(script);
+    }
   }, []);
-
-  useEffect(() => {
-    const loadOrParse = () => {
-      if (window.FB) {
-        window.FB.XFBML.parse(containerRef.current);
-        return;
-      }
-
-      if (!document.getElementById('fb-root')) {
-        const fbRoot = document.createElement('div');
-        fbRoot.id = 'fb-root';
-        document.body.prepend(fbRoot);
-      }
-
-      if (!document.getElementById('facebook-jssdk')) {
-        const script = document.createElement('script');
-        script.id = 'facebook-jssdk';
-        script.async = true;
-        script.defer = true;
-        script.crossOrigin = 'anonymous';
-        script.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0';
-        document.body.appendChild(script);
-      }
-    };
-
-    const timer = setTimeout(loadOrParse, 50);
-    return () => clearTimeout(timer);
-  }, [width]);
 
   return (
     <section id="facebook-feed" className="bg-bg-primary py-20 sm:py-28">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl sm:text-4xl font-sans font-black tracking-tight text-text-primary mb-8">
           {t('facebook_feed_title')}
         </h2>
-        <div
-          ref={containerRef}
-          className="w-full flex justify-center overflow-hidden rounded-2xl border border-border-primary shadow-xs"
-        >
+        <div className="flex justify-center overflow-hidden rounded-2xl border border-border-primary shadow-xs mx-auto max-w-[500px]">
           <div
-            key={width}
             className="fb-page"
             data-href="https://www.facebook.com/SVSPBELGAUM/"
             data-tabs="timeline"
-            data-width={width}
+            data-width="500"
             data-height="480"
             data-small-header="true"
-            data-adapt-container-width="false"
+            data-adapt-container-width="true"
             data-hide-cover="true"
             data-show-facepile="false"
           >
