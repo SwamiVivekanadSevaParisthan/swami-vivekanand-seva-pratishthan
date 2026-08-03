@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Lang } from '../types';
 import { TRANSLATIONS } from '../data';
 
@@ -15,11 +15,37 @@ interface FacebookFeedProps {
 export default function FacebookFeed({ lang }: FacebookFeedProps) {
   const t = (key: string) => TRANSLATIONS[key]?.[lang] || key;
   const containerRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(500);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        // FB plugin has a hard minimum around 180 and looks best capped at ~600
+        const clamped = Math.min(Math.max(containerWidth, 280), 600);
+        setWidth(clamped);
+      }
+    };
+
+    updateWidth();
+
+    let resizeTimeout: ReturnType<typeof setTimeout>;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(updateWidth, 200);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+    };
+  }, []);
 
   useEffect(() => {
     const loadOrParse = () => {
       if (window.FB) {
-        window.FB.XFBML.parse();
+        window.FB.XFBML.parse(containerRef.current);
         return;
       }
 
@@ -40,26 +66,10 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
       }
     };
 
-    loadOrParse();
-
-    // FB only computes the iframe width once at parse time.
-    // Re-parse on resize (debounced) so it adapts when the viewport changes.
-    let resizeTimeout: ReturnType<typeof setTimeout>;
-    const handleResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        if (window.FB && containerRef.current) {
-          window.FB.XFBML.parse(containerRef.current);
-        }
-      }, 250);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(resizeTimeout);
-    };
-  }, []);
+    // Small delay so the div has the new data-width attribute before FB reads it
+    const timer = setTimeout(loadOrParse, 50);
+    return () => clearTimeout(timer);
+  }, [width]);
 
   return (
     <section id="facebook-feed" className="bg-bg-primary py-20 sm:py-28">
@@ -72,13 +82,14 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
           className="w-full flex justify-center overflow-hidden rounded-2xl border border-border-primary shadow-xs"
         >
           <div
-            className="fb-page w-full"
+            key={width}
+            className="fb-page"
             data-href="https://www.facebook.com/SVSPBELGAUM/"
             data-tabs="timeline"
-            data-width=""
+            data-width={width}
             data-height="480"
             data-small-header="true"
-            data-adapt-container-width="true"
+            data-adapt-container-width="false"
             data-hide-cover="true"
             data-show-facepile="false"
           >
