@@ -1,3 +1,12 @@
+declare global {
+  interface Window {
+    instgrm?: {
+      Embeds: {
+        process: () => void;
+      };
+    };
+  }
+}
 import { useEffect, useRef } from "react";
 
 interface InstagramFeedProps {
