@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Lang } from '../types';
 import { TRANSLATIONS } from '../data';
+import InstagramFeed from './InstagramFeed';
 
 declare global {
   interface Window {
@@ -40,11 +41,16 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
 
   return (
     <section id="facebook-feed" className="bg-bg-primary py-20 sm:py-28">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-3xl sm:text-4xl font-sans font-black tracking-tight text-text-primary mb-8">
-          {t('facebook_feed_title')}
-        </h2>
-        <div className="flex justify-center overflow-hidden rounded-2xl border border-border-primary shadow-xs mx-auto max-w-[500px]">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+      <h2 className="text-3xl sm:text-4xl font-sans font-black tracking-tight text-text-primary mb-8">
+        {t('facebook_feed_title')}
+      </h2>
+
+      <div className="flex flex-col lg:flex-row gap-8 justify-center items-start">
+
+        {/* Facebook */}
+        <div className="w-full lg:w-1/2 flex justify-center overflow-hidden rounded-2xl border border-border-primary shadow-xs">
           <div
             className="fb-page"
             data-href="https://www.facebook.com/SVSPBELGAUM/"
@@ -66,6 +72,18 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
             </blockquote>
           </div>
         </div>
+
+        {/* Instagram */}
+        <div className="w-full lg:w-1/2">
+          <InstagramFeed />
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+);
+            
       </div>
     </section>
   );
