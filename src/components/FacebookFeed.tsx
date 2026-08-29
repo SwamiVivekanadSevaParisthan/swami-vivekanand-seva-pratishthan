@@ -75,7 +75,7 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
 
         {/* Instagram */}
         <div className="w-full lg:w-1/2">
-          <InstagramFeed />
+          <InstagramFeed postUrl=https:"//www.instagram.com/svsp.belagavi"/>
         </div>
 
       </div>
