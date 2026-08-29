@@ -83,8 +83,4 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
     </div>
   </section>
 );
-            
-      </div>
-    </section>
-  );
 }
