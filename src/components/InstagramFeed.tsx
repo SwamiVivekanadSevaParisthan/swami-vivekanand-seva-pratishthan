@@ -1,24 +1,48 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-export default function InstagramFeed() {
+interface InstagramFeedProps {
+  postUrl: string;
+}
+
+export default function InstagramFeed({
+  postUrl,
+}: InstagramFeedProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const existingScript = document.querySelector(
-      'script[src="https://elfsightcdn.com/platform.js"]'
+      'script[src="https://www.instagram.com/embed.js"]'
     );
 
-    if (!existingScript) {
-      const script = document.createElement("script");
-      script.src = "https://elfsightcdn.com/platform.js";
-      script.async = true;
-      document.body.appendChild(script);
+    const processEmbed = () => {
+      if (window.instgrm) {
+        window.instgrm.Embeds.process();
+      }
+    };
+
+    if (existingScript) {
+      processEmbed();
+      return;
     }
-  }, []);
+
+    const script = document.createElement("script");
+    script.src = "https://www.instagram.com/embed.js";
+    script.async = true;
+
+    script.onload = processEmbed;
+
+    document.body.appendChild(script);
+  }, [postUrl]);
 
   return (
-    <div className="w-full overflow-hidden rounded-2xl border border-border-primary shadow-xs bg-white">
-      <div
-        className="elfsight-app-2645b28e-2f90-4933-8772-369ad9004da5"
-        data-elfsight-app-lazy
+    <div
+      ref={containerRef}
+      className="w-full flex justify-center overflow-hidden rounded-2xl"
+    >
+      <blockquote
+        className="instagram-media"
+        data-instgrm-permalink={postUrl}
+        data-instgrm-version="14"
       />
     </div>
   );
