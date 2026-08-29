@@ -15,7 +15,7 @@ export default function InstagramFeed() {
   }, []);
 
   return (
-    <div className="w-full overflow-hidden rounded-2xl border border-border-primary shadow-xs">
+    <div className="w-full overflow-hidden rounded-2xl border border-border-primary shadow-xs bg-white">
       <div
         className="elfsight-app-2645b28e-2f90-4933-8772-369ad9004da5"
         data-elfsight-app-lazy
