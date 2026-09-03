@@ -17,7 +17,6 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
   const t = (key: string) => TRANSLATIONS[key]?.[lang] || key;
 
   useEffect(() => {
-    // Load Facebook SDK
     if (window.FB) {
       window.FB.XFBML.parse();
       return;
@@ -40,7 +39,6 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
   }, []);
 
   useEffect(() => {
-    // Load Curator script only once
     if (document.getElementById('curator-feed-script')) return;
     const script = document.createElement('script');
     script.id = 'curator-feed-script';
@@ -56,7 +54,6 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
       id="facebook-feed"
       className="relative py-20 sm:py-28 bg-bg-primary overflow-hidden"
     >
-      {/* Soft ambient tint — kills the flat-white feel in light mode without touching dark mode */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 bg-gradient-to-b from-orange-50/70 via-transparent to-transparent dark:from-transparent"
@@ -77,9 +74,7 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
           See our latest updates, drives, and moments from the community — right here.
         </p>
 
-        {/* Existing Facebook + Instagram */}
         <div className="flex flex-col lg:flex-row gap-8 justify-center items-stretch">
-          {/* Facebook — KEEP */}
           <div className="w-full lg:w-1/2 flex justify-center overflow-hidden rounded-2xl border border-border-primary bg-bg-secondary dark:bg-bg-secondary/60 dark:backdrop-blur-sm shadow-lg shadow-black/5 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5 transition-shadow hover:shadow-xl">
             <div
               className="fb-page w-full"
@@ -103,13 +98,11 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
             </div>
           </div>
 
-          {/* Instagram — KEEP */}
           <div className="w-full lg:w-1/2 rounded-2xl border border-border-primary bg-bg-secondary dark:bg-bg-secondary/60 dark:backdrop-blur-sm shadow-lg shadow-black/5 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5 transition-shadow hover:shadow-xl overflow-hidden">
             <InstagramFeed post="https://www.instagram.com/svsp.belagavi/" />
           </div>
         </div>
 
-        {/* Curator — Instagram + X/Twitter */}
         <div className="mt-16">
           <div className="flex items-center gap-4 mb-8">
             <span className="h-px flex-1 bg-border-primary" />
@@ -120,7 +113,7 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
           </div>
 
           <div className="w-full overflow-hidden rounded-2xl border border-border-primary bg-bg-secondary dark:bg-bg-secondary/60 dark:backdrop-blur-sm shadow-lg shadow-black/5 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5">
-                        <div id="curator-feed-default-feed-layout">
+            <div id="curator-feed-default-feed-layout">
               
                 href="https://curator.io"
                 target="_blank"
