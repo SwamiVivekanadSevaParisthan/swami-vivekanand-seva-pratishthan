@@ -120,7 +120,7 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
           </div>
 
           <div className="w-full overflow-hidden rounded-2xl border border-border-primary bg-bg-secondary dark:bg-bg-secondary/60 dark:backdrop-blur-sm shadow-lg shadow-black/5 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5">
-            <div id="curator-feed-default-feed-layout">
+                        <div id="curator-feed-default-feed-layout">
               
                 href="https://curator.io"
                 target="_blank"
