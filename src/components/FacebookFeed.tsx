@@ -60,3 +60,7 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
             <InstagramFeed post="https://www.instagram.com/svsp.belagavi/" />
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
