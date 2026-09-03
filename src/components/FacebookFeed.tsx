@@ -37,16 +37,6 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
     }
   }, []);
 
-  useEffect(() => {
-    if (document.getElementById('curator-feed-script')) return;
-    const script = document.createElement('script');
-    script.id = 'curator-feed-script';
-    script.async = true;
-    script.charset = 'UTF-8';
-    script.src = 'https://cdn.curator.io/published/aff7b61e-cce9-47ab-9ab9-73dc8cbe687d.js';
-    document.body.appendChild(script);
-  }, []);
-
   return (
     <section id="facebook-feed" className="relative py-20 sm:py-28 bg-bg-primary overflow-hidden">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-b from-orange-50/70 via-transparent to-transparent dark:from-transparent" />
@@ -70,21 +60,3 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
             <InstagramFeed post="https://www.instagram.com/svsp.belagavi/" />
           </div>
         </div>
-
-        <div className="mt-16">
-          <div className="flex items-center gap-4 mb-8">
-            <span className="h-px flex-1 bg-border-primary" />
-            <h3 className="text-xl sm:text-2xl font-sans font-bold tracking-tight text-text-primary whitespace-nowrap">Follow Our Journey</h3>
-            <span className="h-px flex-1 bg-border-primary" />
-          </div>
-
-          <div className="w-full overflow-hidden rounded-2xl border border-border-primary bg-bg-secondary dark:bg-bg-secondary/60 dark:backdrop-blur-sm shadow-lg shadow-black/5 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5">
-            <div id="curator-feed-default-feed-layout">
-              <a href="https://curator.io" target="_blank" rel="noreferrer" className="crt-logo crt-tag">Powered by Curator.io</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
