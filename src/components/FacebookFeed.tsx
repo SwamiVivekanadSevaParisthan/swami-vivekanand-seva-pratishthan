@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Lang } from '../types';
 import { TRANSLATIONS } from '../data';
-import InstagramFeed from './InstagramFeed';
 
 declare global {
   interface Window {
@@ -37,6 +36,16 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
     }
   }, []);
 
+  useEffect(() => {
+    if (document.getElementById('curator-feed-script')) return;
+    const script = document.createElement('script');
+    script.id = 'curator-feed-script';
+    script.async = true;
+    script.charset = 'UTF-8';
+    script.src = 'https://cdn.curator.io/published/aff7b61e-cce9-47ab-9ab9-73dc8cbe687d.js';
+    document.body.appendChild(script);
+  }, []);
+
   return (
     <section id="facebook-feed" className="relative py-20 sm:py-28 bg-bg-primary overflow-hidden">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-b from-orange-50/70 via-transparent to-transparent dark:from-transparent" />
@@ -57,7 +66,9 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
           </div>
 
           <div className="w-full lg:w-1/2 rounded-2xl border border-border-primary bg-bg-secondary dark:bg-bg-secondary/60 dark:backdrop-blur-sm shadow-lg shadow-black/5 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5 transition-shadow hover:shadow-xl overflow-hidden">
-            <InstagramFeed post="https://www.instagram.com/svsp.belagavi/" />
+            <div id="curator-feed-default-feed-layout" className="w-full h-full min-h-[480px]">
+              <a href="https://curator.io" target="_blank" rel="noreferrer" className="crt-logo crt-tag">Powered by Curator.io</a>
+            </div>
           </div>
         </div>
       </div>
