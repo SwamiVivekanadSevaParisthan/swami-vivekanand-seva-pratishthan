@@ -71,7 +71,81 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
             </div>
           </div>
         </div>
+
+        <MastodonFeed />
       </div>
     </section>
+  );
+}
+
+// Mastodon profile timeline
+function MastodonFeed() {
+  useEffect(() => {
+    const loadMastodon = async () => {
+      // Load CSS
+      if (!document.getElementById('mastodon-timeline-css')) {
+        const link = document.createElement('link');
+        link.id = 'mastodon-timeline-css';
+        link.rel = 'stylesheet';
+        link.href =
+          'https://cdn.jsdelivr.net/npm/@idotj/mastodon-embed-timeline@4.8.2/dist/mastodon-timeline.min.css';
+        document.head.appendChild(link);
+      }
+
+      // Load JavaScript
+      if (!document.getElementById('mastodon-timeline-js')) {
+        const script = document.createElement('script');
+        script.id = 'mastodon-timeline-js';
+        script.src =
+          'https://cdn.jsdelivr.net/npm/@idotj/mastodon-embed-timeline@4.8.2/dist/mastodon-timeline.umd.js';
+        script.async = true;
+        document.body.appendChild(script);
+
+        await new Promise((resolve) => {
+          script.onload = resolve;
+        });
+      }
+
+      // Get your Mastodon account ID
+      const response = await fetch(
+        'https://mastodon.social/api/v1/accounts/lookup?acct=svsp'
+      );
+      const account = await response.json();
+
+      // Initialize the timeline
+      const MastodonTimeline = (window as any).MastodonTimeline;
+
+      if (MastodonTimeline) {
+        new MastodonTimeline.Init({
+          instanceUrl: 'https://mastodon.social',
+          timelineType: 'profile',
+          userId: account.id,
+          profileName: '@svsp@mastodon.social',
+          defaultTheme: 'auto',
+          maxNbPostFetch: '40',
+          maxNbPostShow: '10',
+          hideUnlisted: true,
+          hideReplies: true,
+          hideReblog: true,
+          hidePinnedPosts: true,
+        });
+      }
+    };
+
+    loadMastodon();
+  }, []);
+
+  return (
+    <div className="mt-12">
+      <h3 className="text-2xl sm:text-3xl font-sans font-bold tracking-tight text-text-primary mb-6">
+        Follow Our Journey on Mastodon
+      </h3>
+
+      <div id="mt-container" className="mt-container">
+        <div className="mt-body" role="feed">
+          <div className="mt-loading-spinner"></div>
+        </div>
+      </div>
+    </div>
   );
 }
