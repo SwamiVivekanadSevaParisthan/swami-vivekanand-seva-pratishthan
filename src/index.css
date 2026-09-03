@@ -1,13 +1,34 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #eef2f5;
-  --bg-secondary: #faf7f2;
+  /* Warm ivory base instead of cool blue-gray — feels welcoming, not corporate */
+  --bg-primary: #f7f4ee;
+  --bg-secondary: #fdfaf4;
   --bg-card: #ffffff;
-  --text-primary: #111827;
-  --text-secondary: #374151;
-  --text-tertiary: #6b7280;
-  --border-primary: #f1f5f9;
+
+  --text-primary: #201c16;
+  --text-secondary: #4a4438;
+  --text-tertiary: #8a8072;
+
+  --border-primary: #ece4d4;
+
+  /* Brand accents — pulled from your existing shimmer gold + donate rose,
+     now available as reusable tokens instead of one-off hex codes */
+  --accent-primary: #e79a1f;      /* saffron / gold — matches ADOPT + shimmer */
+  --accent-primary-hover: #cf8712;
+  --accent-primary-soft: #fbeacc;
+
+  --accent-secondary: #e0407a;    /* warm rose — matches DONATE */
+  --accent-secondary-hover: #c72f65;
+  --accent-secondary-soft: #fbdde9;
+
+  --shadow-color: 30 20% 10%;
+  --shadow-soft: 0 1px 2px hsl(var(--shadow-color) / 0.04),
+    0 8px 24px hsl(var(--shadow-color) / 0.06);
+  --shadow-lifted: 0 4px 8px hsl(var(--shadow-color) / 0.06),
+    0 16px 40px hsl(var(--shadow-color) / 0.1);
+
+  --radius-card: 1.25rem;
 
   --transition-speed: 300ms;
   --transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
@@ -20,18 +41,31 @@ html {
 
 html.dark {
   /* Solid fallback so translucent card/bg layers have something opaque behind them */
-  background-color: #060c0e;
+  background-color: #0c0a08;
 }
 
 [data-theme="dark"],
 .dark {
-  --bg-primary: rgba(12, 22, 26, 0.73);
-  --bg-secondary: rgba(18, 28, 33, 0.68);
-  --bg-card: rgba(20, 34, 41, 0.85);
-  --text-primary: #ffffff;
-  --text-secondary: #e5e7eb;
-  --text-tertiary: #9ca3af;
-  --border-primary: rgba(34, 50, 59, 0.5);
+  /* Warm charcoal-brown instead of cool teal — keeps the gold/rose accents glowing */
+  --bg-primary: rgba(18, 15, 12, 0.75);
+  --bg-secondary: rgba(26, 21, 16, 0.68);
+  --bg-card: rgba(30, 25, 19, 0.85);
+
+  --text-primary: #fbf8f3;
+  --text-secondary: #e8e2d6;
+  --text-tertiary: #a89e8d;
+
+  --border-primary: rgba(90, 74, 50, 0.4);
+
+  --accent-primary: #f4b223;
+  --accent-primary-hover: #ffc94d;
+  --accent-primary-soft: rgba(244, 178, 35, 0.14);
+
+  --accent-secondary: #ef5f95;
+  --accent-secondary-hover: #f680ac;
+  --accent-secondary-soft: rgba(239, 95, 149, 0.14);
+
+  --shadow-color: 0 0% 0%;
 }
 
 @theme {
@@ -42,10 +76,20 @@ html.dark {
   --color-bg-primary: var(--bg-primary);
   --color-bg-secondary: var(--bg-secondary);
   --color-bg-card: var(--bg-card);
+
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-tertiary);
+
   --color-border-primary: var(--border-primary);
+
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-primary-hover: var(--accent-primary-hover);
+  --color-accent-primary-soft: var(--accent-primary-soft);
+
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-secondary-hover: var(--accent-secondary-hover);
+  --color-accent-secondary-soft: var(--accent-secondary-soft);
 }
 
 /* Smooth theme switching for color-related properties across the whole tree */
@@ -90,7 +134,7 @@ img[src*="logo"] {
   scrollbar-width: none;
 }
 
-/* Shimmer / glowing text sweep */
+/* Shimmer / glowing text sweep — now tied to the accent token, not a bare hex */
 @keyframes shimmer-sweep {
   0% {
     background-position: -150% center;
@@ -102,15 +146,14 @@ img[src*="logo"] {
     background-position: 150% center;
   }
 }
-
 .shimmer-glow-text {
   background: linear-gradient(
     90deg,
     #ffffff 0%,
     #ffffff 25%,
-    #f4b223 45%,
+    var(--accent-primary) 45%,
     #ffe082 50%,
-    #f4b223 55%,
+    var(--accent-primary) 55%,
     #ffffff 75%,
     #ffffff 100%
   );
@@ -143,13 +186,75 @@ img[src*="logo"] {
     transform: translateX(-50%);
   }
 }
-
 .animate-marquee {
   display: flex;
   width: max-content;
   animation: marquee 25s linear infinite;
 }
-
 .animate-marquee:hover {
   animation-play-state: paused;
+}
+
+/* ---------- New: reusable warmth utilities ---------- */
+
+/* Elevated card — replaces ad-hoc border+shadow combos scattered across components */
+.card-warm {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow var(--transition-speed) var(--transition-easing),
+    transform var(--transition-speed) var(--transition-easing);
+}
+.card-warm:hover {
+  box-shadow: var(--shadow-lifted);
+  transform: translateY(-2px);
+}
+
+/* Soft radial glow behind hero/section headings — subtle, not a full gradient wash */
+.warm-glow {
+  position: relative;
+}
+.warm-glow::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 60%;
+  background: radial-gradient(
+    ellipse at center,
+    var(--accent-primary-soft) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Primary CTA (Adopt, gold) */
+.btn-accent-primary {
+  background-color: var(--accent-primary);
+  color: #1c1206;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  box-shadow: 0 6px 16px hsl(var(--shadow-color) / 0.18);
+  transition: background-color var(--transition-speed) var(--transition-easing),
+    transform var(--transition-speed) var(--transition-easing);
+}
+.btn-accent-primary:hover {
+  background-color: var(--accent-primary-hover);
+  transform: translateY(-1px);
+}
+
+/* Secondary CTA (Donate, rose) */
+.btn-accent-secondary {
+  background-color: var(--accent-secondary);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  box-shadow: 0 6px 16px hsl(var(--shadow-color) / 0.18);
+  transition: background-color var(--transition-speed) var(--transition-easing),
+    transform var(--transition-speed) var(--transition-easing);
+}
+.btn-accent-secondary:hover {
+  background-color: var(--accent-secondary-hover);
+  transform: translateY(-1px);
 }
