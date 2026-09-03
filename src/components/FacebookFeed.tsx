@@ -80,7 +80,7 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
         {/* Existing Facebook + Instagram */}
         <div className="flex flex-col lg:flex-row gap-8 justify-center items-stretch">
           {/* Facebook — KEEP */}
-          <div className="w-full lg:w-1/2 flex justify-center overflow-hidden rounded-2xl border border-border-primary bg-bg-secondary/60 backdrop-blur-sm shadow-lg shadow-black/5 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5 transition-shadow hover:shadow-xl">
+          <div className="w-full lg:w-1/2 flex justify-center overflow-hidden rounded-2xl border border-border-primary bg-bg-secondary dark:bg-bg-secondary/60 dark:backdrop-blur-sm shadow-lg shadow-black/5 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5 transition-shadow hover:shadow-xl">
             <div
               className="fb-page w-full"
               data-href="https://www.facebook.com/SVSPBELGAUM/"
@@ -104,7 +104,7 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
           </div>
 
           {/* Instagram — KEEP */}
-          <div className="w-full lg:w-1/2 rounded-2xl border border-border-primary bg-bg-secondary/60 backdrop-blur-sm shadow-lg shadow-black/5 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5 transition-shadow hover:shadow-xl overflow-hidden">
+          <div className="w-full lg:w-1/2 rounded-2xl border border-border-primary bg-bg-secondary dark:bg-bg-secondary/60 dark:backdrop-blur-sm shadow-lg shadow-black/5 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5 transition-shadow hover:shadow-xl overflow-hidden">
             <InstagramFeed post="https://www.instagram.com/svsp.belagavi/" />
           </div>
         </div>
@@ -119,7 +119,7 @@ export default function FacebookFeed({ lang }: FacebookFeedProps) {
             <span className="h-px flex-1 bg-border-primary" />
           </div>
 
-          <div className="w-full overflow-hidden rounded-2xl border border-border-primary bg-bg-secondary/60 backdrop-blur-sm shadow-lg shadow-black/5 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5">
+          <div className="w-full overflow-hidden rounded-2xl border border-border-primary bg-bg-secondary dark:bg-bg-secondary/60 dark:backdrop-blur-sm shadow-lg shadow-black/5 dark:shadow-black/30 ring-1 ring-black/5 dark:ring-white/5">
             <div id="curator-feed-default-feed-layout">
               
                 href="https://curator.io"
