@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Globe, Heart, FileText, Sun, Moon } from 'lucide-react';
+import { Globe, Heart, FileText, Sun, Moon, Menu, X, ChevronRight } from 'lucide-react';
 import { Lang } from '../types';
 import { TRANSLATIONS } from '../data';
 
@@ -15,6 +15,13 @@ interface NavbarProps {
   isNavbarVisible?: boolean;
 }
 
+const LANGUAGE_LABELS: Record<Lang, string> = {
+  EN: 'English',
+  HI: 'हिन्दी',
+  KN: 'ಕನ್ನಡ',
+  MR: 'मराठी'
+};
+
 export default function Navbar({
   lang,
   setLang,
@@ -28,7 +35,10 @@ export default function Navbar({
 }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mobileLangOpen, setMobileLangOpen] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,36 +47,53 @@ export default function Navbar({
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-useEffect(() => {
-  const handleTopHover = (e: MouseEvent) => {
-    if (e.clientY < 80) {
-      const navbar = document.getElementById("main-navigation-header");
 
-      if (navbar) {
-        navbar.style.transform = "translateY(0)";
-      }
-    }
-  };
-
-  window.addEventListener("mousemove", handleTopHover);
-
-  return () => {
-    window.removeEventListener("mousemove", handleTopHover);
-  };
-}, []);
-  // Auto-scroll active tab into view on mobile
   useEffect(() => {
-    if (scrollContainerRef.current) {
-      const activeElement = scrollContainerRef.current.querySelector('[data-active="true"]');
-      if (activeElement) {
-        activeElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'center'
-        });
+    const handleTopHover = (e: MouseEvent) => {
+      if (e.clientY < 80) {
+        const navbar = document.getElementById('main-navigation-header');
+        if (navbar) {
+          navbar.style.transform = 'translateY(0)';
+        }
       }
+    };
+    window.addEventListener('mousemove', handleTopHover);
+    return () => window.removeEventListener('mousemove', handleTopHover);
+  }, []);
+
+  // Lock body scroll while the mobile drawer is open, close on Escape,
+  // and return focus to the trigger button when it closes.
+  useEffect(() => {
+    if (isMenuOpen) {
+      const previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          setIsMenuOpen(false);
+        }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = previousOverflow;
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    } else {
+      menuButtonRef.current?.focus();
     }
-  }, [activeSection]);
+  }, [isMenuOpen]);
+
+  // Close the drawer automatically if the viewport grows past the mobile breakpoint
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024 && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isMenuOpen]);
 
   const t = (key: string) => TRANSLATIONS[key]?.[lang] || key;
 
@@ -81,10 +108,16 @@ useEffect(() => {
 
   const languages: Lang[] = ['EN', 'HI', 'KN', 'MR'];
 
+  const handleMobileNavigate = (sectionId: string) => {
+    setIsMenuOpen(false);
+    onNavigate(sectionId);
+  };
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-500 border-b transform transform transalte-y-0 ${
-        
+      className={`fixed top-0 left-0 right-0 z-[999] transition-all duration-500 border-b transform ${
+        isNavbarVisible ? 'translate-y-0' : '-translate-y-full'
+      } ${
         isScrolled
           ? 'bg-[#1d2d35]/95 backdrop-blur-3xl border-white/10 shadow-xl py-2'
           : 'bg-[#142026]/90 backdrop-blur-2xl border-white/5 py-3'
@@ -116,7 +149,7 @@ useEffect(() => {
             </div>
           </button>
 
-          {/* Desktop Right side: Nav links + Language → Adopt → Donate */}
+          {/* Desktop Right side: Nav links + Language -> Adopt -> Donate */}
           <div className="flex items-center gap-6 xl:gap-8 pr-2">
             <nav className="flex items-center gap-4 xl:gap-7 flex-nowrap min-w-0" aria-label="Desktop Global Nav">
               {navItems.map((item) => (
@@ -146,6 +179,8 @@ useEffect(() => {
                 <button
                   id="language-select-dropdown"
                   onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                  aria-haspopup="listbox"
+                  aria-expanded={langDropdownOpen}
                   className="flex items-center gap-2 text-xs font-bold border border-white/10 bg-white/5 rounded-xl px-4 h-[42px] text-white hover:bg-white/10 cursor-pointer transition-colors duration-200"
                 >
                   <Globe size={14} className="text-amber-400" />
@@ -155,11 +190,16 @@ useEffect(() => {
                 {langDropdownOpen && (
                   <>
                     <div className="fixed inset-0 z-30" onClick={() => setLangDropdownOpen(false)} />
-                    <div className="absolute right-0 mt-2.5 w-32 bg-[#1d2d35] border border-white/10 rounded-xl shadow-2xl py-1.5 z-40 text-white">
+                    <div
+                      role="listbox"
+                      className="absolute right-0 mt-2.5 w-32 bg-[#1d2d35] border border-white/10 rounded-xl shadow-2xl py-1.5 z-40 text-white"
+                    >
                       {languages.map((l) => (
                         <button
                           key={l}
                           id={`lang-opt-${l}`}
+                          role="option"
+                          aria-selected={lang === l}
                           onClick={() => {
                             setLang(l);
                             setLangDropdownOpen(false);
@@ -168,7 +208,7 @@ useEffect(() => {
                             lang === l ? 'bg-white/10 text-[#f4b223]' : 'text-white/80'
                           }`}
                         >
-                          <span>{l === 'EN' ? 'English' : l === 'HI' ? 'हिन्दी' : l === 'KN' ? 'ಕನ್ನಡ' : 'मराठी'}</span>
+                          <span>{LANGUAGE_LABELS[l]}</span>
                           <span className="text-[9px] font-mono text-white/40">{l}</span>
                         </button>
                       ))}
@@ -215,109 +255,199 @@ useEffect(() => {
           </div>
         </div>
 
-        {/* MOBILE & TABLET REDESIGNED LAYOUT (< 1024px) */}
-        <div className="block lg:hidden flex flex-col gap-2.5 py-1" id="mobile-tablet-navbar">
-          
-          {/* ROW 1: Logo, Full Organization Name, and Tagline */}
-          <div className="flex items-center gap-3 w-full" id="mob-row-1">
-            <button
-              onClick={() => onNavigate('hero')}
-              className="navbar-logo flex-shrink-0 cursor-pointer focus:outline-none"
-              id="mob-logo-btn"
-            >
-              <img
-                src={`${import.meta.env.BASE_URL}logo.png`}
-                alt="Swami Vivekanand Seva Pratishthan Logo"
-                className="h-[46px] w-[46px] sm:h-[54px] sm:w-[54px] object-contain pointer-events-none select-none"
-                referrerPolicy="no-referrer"
-              />
-            </button>
+        {/* MOBILE & TABLET LAYOUT (< 1024px) — Logo + Hamburger trigger only */}
+        <div className="flex lg:hidden items-center justify-between w-full h-[58px] sm:h-[66px]" id="mobile-tablet-navbar">
+          <button
+            onClick={() => onNavigate('hero')}
+            className="navbar-logo flex items-center gap-2.5 sm:gap-3 group cursor-pointer text-left focus:outline-none min-w-0"
+            id="mob-logo-btn"
+          >
+            <img
+              src={`${import.meta.env.BASE_URL}logo.png`}
+              alt="Swami Vivekanand Seva Pratishthan Logo"
+              className="h-[42px] w-[42px] sm:h-[50px] sm:w-[50px] object-contain flex-shrink-0 pointer-events-none select-none"
+              referrerPolicy="no-referrer"
+            />
             <div className="flex flex-col text-left justify-center min-w-0 flex-1">
-              <h1 className="tracking-tight uppercase leading-[1.2] text-[11px] sm:text-[13px] font-extrabold font-sans shimmer-glow-text">
+              <h1 className="tracking-tight uppercase leading-[1.2] text-[11px] sm:text-[13px] font-extrabold font-sans shimmer-glow-text truncate">
                 Swami Vivekanand Seva Pratishthan
               </h1>
-              <p className="text-[8px] sm:text-[9.5px] font-sans font-semibold text-[#f4b223] mt-0.5 leading-snug">
+              <p className="text-[8px] sm:text-[9.5px] font-sans font-semibold text-[#f4b223] mt-0.5 leading-snug truncate">
                 {t('nav_slogan')}
               </p>
             </div>
+          </button>
+
+          {/* Hamburger Trigger */}
+          <button
+            ref={menuButtonRef}
+            id="mobile-menu-trigger"
+            onClick={() => setIsMenuOpen(true)}
+            aria-label="Open navigation menu"
+            aria-haspopup="dialog"
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-nav-drawer"
+            className="flex-shrink-0 flex items-center justify-center w-[42px] h-[42px] rounded-xl border border-white/10 bg-white/5 text-white hover:bg-white/10 active:scale-95 transition-all duration-200 cursor-pointer"
+          >
+            <Menu size={20} />
+          </button>
+        </div>
+      </div>
+
+      {/* MOBILE DRAWER: backdrop + sliding panel */}
+      <div
+        className={`lg:hidden fixed inset-0 z-[1000] transition-opacity duration-300 ${
+          isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+        aria-hidden={!isMenuOpen}
+      >
+        {/* Backdrop */}
+        <div
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+          onClick={() => setIsMenuOpen(false)}
+        />
+
+        {/* Sliding Panel */}
+        <div
+          ref={drawerRef}
+          id="mobile-nav-drawer"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site navigation"
+          className={`absolute top-0 right-0 h-full w-[86%] max-w-[360px] bg-[#152128] border-l border-white/10 shadow-2xl flex flex-col transition-transform duration-300 ease-out ${
+            isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          {/* Drawer Header */}
+          <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 flex-shrink-0">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <img
+                src={`${import.meta.env.BASE_URL}logo.png`}
+                alt="Swami Vivekanand Seva Pratishthan Logo"
+                className="h-[36px] w-[36px] object-contain flex-shrink-0 pointer-events-none select-none"
+                referrerPolicy="no-referrer"
+              />
+              <span className="text-[12px] font-extrabold uppercase tracking-tight text-white truncate">
+                Swami Vivekanand Seva Pratishthan
+              </span>
+            </div>
+            <button
+              id="mobile-menu-close"
+              onClick={() => setIsMenuOpen(false)}
+              aria-label="Close navigation menu"
+              className="flex-shrink-0 flex items-center justify-center w-[38px] h-[38px] rounded-xl border border-white/10 bg-white/5 text-white hover:bg-white/10 active:scale-95 transition-all duration-200 cursor-pointer"
+            >
+              <X size={18} />
+            </button>
           </div>
 
-          {/* ROW 2: Single Horizontally Scrollable Navigation & Actions Row (Hides scrollbars, NO hamburger menu) */}
-          <div className="border-t border-white/5 pt-2" id="mob-scrollable-links-container">
-            <div
-              ref={scrollContainerRef}
-              className="flex items-center gap-1.5 overflow-x-auto scrollbar-none scroll-smooth flex-nowrap -mx-4 px-4 snap-x"
-              aria-label="Mobile and Tablet Navigation Links and Actions"
-            >
-              {/* Core Nav Items (Home → About Us → Objectives → Staff & Team → Recognition → Contact Us) */}
+          {/* Drawer Body: scrollable nav + settings */}
+          <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4 flex flex-col gap-6">
+            {/* Nav Links */}
+            <nav className="flex flex-col gap-1" aria-label="Mobile Global Nav">
               {navItems.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
                   <button
                     key={item.id}
-                    id={`moblenlink-${item.id}`}
-                    data-active={isActive ? 'true' : 'false'}
-                    onClick={() => onNavigate(item.id)}
-                    className={`snap-center flex-shrink-0 px-3.5 py-1.5 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer whitespace-nowrap ${
+                    id={`mobnavlink-${item.id}`}
+                    onClick={() => handleMobileNavigate(item.id)}
+                    className={`flex items-center justify-between text-left px-4 py-3 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer ${
                       isActive
-                        ? 'bg-amber-500 text-slate-950 font-black shadow-md scale-102 font-sans'
-                        : 'bg-white/5 text-white/80 border border-white/5 hover:bg-white/10 active:scale-95 font-sans'
+                        ? 'bg-amber-500 text-slate-950 font-black shadow-md'
+                        : 'bg-white/5 text-white/85 hover:bg-white/10'
                     }`}
                   >
-                    {t(item.key)}
+                    <span>{t(item.key)}</span>
+                    <ChevronRight size={16} className={isActive ? 'text-slate-950' : 'text-white/40'} />
                   </button>
                 );
               })}
+            </nav>
 
-              {/* Language Selector Pill */}
-              <div className="relative flex-shrink-0 snap-center" id="mob-language-select-wrapper">
-                <select
-                  value={lang}
-                  onChange={(e) => setLang(e.target.value as Lang)}
-                  className="appearance-none bg-white/5 text-white/80 border border-white/5 hover:bg-white/10 active:scale-95 px-3.5 py-1.5 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer whitespace-nowrap text-center focus:outline-none font-sans"
-                  style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
-                  id="mobile-language-select-pill"
-                >
-                  <option value="EN" className="bg-[#1d2d35] text-white">EN</option>
-                  <option value="HI" className="bg-[#1d2d35] text-white">HI</option>
-                  <option value="KN" className="bg-[#1d2d35] text-white">KN</option>
-                  <option value="MR" className="bg-[#1d2d35] text-white">MR</option>
-                </select>
-              </div>
-
-              {/* Theme Toggle Button Pill */}
+            {/* Language Selector */}
+            <div className="flex flex-col gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/40 px-1">
+                Language
+              </span>
               <button
-                id="theme-toggle-mobile"
+                onClick={() => setMobileLangOpen(!mobileLangOpen)}
+                aria-expanded={mobileLangOpen}
+                className="flex items-center justify-between px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white text-sm font-bold cursor-pointer"
+              >
+                <span className="flex items-center gap-2">
+                  <Globe size={15} className="text-amber-400" />
+                  {LANGUAGE_LABELS[lang]}
+                </span>
+                <ChevronRight size={16} className={`text-white/40 transition-transform duration-200 ${mobileLangOpen ? 'rotate-90' : ''}`} />
+              </button>
+              {mobileLangOpen && (
+                <div className="grid grid-cols-2 gap-2 mt-1">
+                  {languages.map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => {
+                        setLang(l);
+                        setMobileLangOpen(false);
+                      }}
+                      className={`px-3 py-2.5 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer ${
+                        lang === l
+                          ? 'bg-[#f4b223] text-slate-950'
+                          : 'bg-white/5 text-white/75 hover:bg-white/10 border border-white/5'
+                      }`}
+                    >
+                      {LANGUAGE_LABELS[l]}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Theme Toggle */}
+            <div className="flex flex-col gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/40 px-1">
+                Appearance
+              </span>
+              <button
                 onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                className="snap-center flex-shrink-0 flex items-center justify-center border border-white/5 bg-white/5 hover:bg-white/10 rounded-full w-[32px] h-[32px] text-white active:scale-95 duration-150 cursor-pointer"
-                aria-label="Toggle Theme"
+                className="flex items-center justify-between px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white text-sm font-bold cursor-pointer"
               >
-                {theme === 'light' ? (
-                  <Moon size={13} className="text-[#f4b223]" />
-                ) : (
-                  <Sun size={13} className="text-amber-400" />
-                )}
-              </button>
-
-              {/* Adopt Action Button */}
-              <button
-                id="mobile-adopt-cta"
-                onClick={onAdoptClick}
-                className="snap-center flex-shrink-0 flex items-center justify-center bg-[#f4b223] hover:bg-amber-500 text-slate-900 text-xs font-black uppercase rounded-full px-4 py-1.5 h-[32px] transition-all duration-200 active:scale-95 cursor-pointer whitespace-nowrap leading-none font-sans"
-              >
-                <span>{t('nav_adopt')}</span>
-              </button>
-
-              {/* Donate Action Button */}
-              <button
-                id="mobile-donate-cta"
-                onClick={onDonateClick}
-                className="snap-center flex-shrink-0 flex items-center justify-center gap-1 bg-[#d91f63] hover:bg-[#c01958] text-white text-xs font-black uppercase rounded-full px-4 py-1.5 h-[32px] transition-all duration-200 active:scale-95 cursor-pointer whitespace-nowrap leading-none font-sans"
-              >
-                <Heart className="fill-white" size={11} />
-                <span>{t('nav_donate')}</span>
+                <span className="flex items-center gap-2">
+                  {theme === 'light' ? (
+                    <Moon size={15} className="text-[#f4b223]" />
+                  ) : (
+                    <Sun size={15} className="text-amber-400" />
+                  )}
+                  {theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+                </span>
               </button>
             </div>
+          </div>
+
+          {/* Drawer Footer: sticky action buttons */}
+          <div className="flex-shrink-0 px-5 py-4 border-t border-white/10 flex flex-col gap-2.5">
+            <button
+              id="mobile-drawer-adopt-cta"
+              onClick={() => {
+                setIsMenuOpen(false);
+                onAdoptClick();
+              }}
+              className="flex items-center justify-center gap-2 bg-[#f4b223] hover:bg-amber-500 active:scale-[0.98] text-slate-950 text-sm font-black uppercase rounded-xl px-6 h-[46px] transition-all duration-300 shadow-md shadow-amber-950/20 cursor-pointer font-sans"
+            >
+              <FileText size={15} className="stroke-[2.5]" />
+              <span>{t('nav_adopt')}</span>
+            </button>
+            <button
+              id="mobile-drawer-donate-cta"
+              onClick={() => {
+                setIsMenuOpen(false);
+                onDonateClick();
+              }}
+              className="flex items-center justify-center gap-2 bg-[#d91f63] hover:bg-[#c01958] active:scale-[0.98] text-white text-sm font-black uppercase rounded-xl px-6 h-[46px] transition-all duration-300 shadow-md shadow-pink-950/20 cursor-pointer font-sans"
+            >
+              <Heart className="fill-white" size={15} />
+              <span>{t('nav_donate')}</span>
+            </button>
           </div>
         </div>
       </div>
