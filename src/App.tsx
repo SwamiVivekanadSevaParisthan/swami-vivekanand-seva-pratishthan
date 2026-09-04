@@ -204,10 +204,10 @@ export default function App() {
           onDonateClick={() => triggerDonate()}
           onNavigate={handleNavigate}
         />
-         
+
       <div className="relative">
 
-  <div className="relative z-10">   
+  <div className="relative z-10">
         {/* 2. Storytelling / Mission Stat counters Section */}
         <FadeInSection>
           <Mission lang={lang} />
@@ -253,7 +253,7 @@ export default function App() {
         <FadeInSection>
           <Testimonials lang={lang} />
         </FadeInSection>
-        
+
         {/* Key Donors */}
         <FadeInSection>
         <KeyDonors lang={lang} />
@@ -264,7 +264,7 @@ export default function App() {
           <ContactSection lang={lang} />
         </FadeInSection>
         </div>
-       </div>. 
+       </div>
         {/* 8. Minimal Newsletter subscriber field */}
         <FadeInSection>
           <Newsletter lang={lang} />
@@ -278,9 +278,6 @@ export default function App() {
         onDonateClick={() => triggerDonate()}
       />
 
-      {/* Fully styled checkout simulation panel modal */}
-      
-
       {/* Fully styled pre-registration CARA adoption modal */}
       <AdoptModal
         isOpen={isAdoptOpen}
@@ -291,4 +288,3 @@ export default function App() {
     </div>
   );
 }
-
