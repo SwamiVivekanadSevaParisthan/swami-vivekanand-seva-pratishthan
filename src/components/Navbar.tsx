@@ -305,15 +305,16 @@ export default function Navbar({
         {/* Backdrop */}
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)} />
 
-        {/* Sliding Panel — half the viewport width, with a sensible floor so it
-            never gets uncomfortably narrow on very small phones. */}
+        {/* Sliding Panel — half the viewport width, sized to fit its own
+            content (no internal scrollbar) rather than stretching to the full
+            screen height. */}
         <div
           ref={drawerRef}
           id="mobile-nav-drawer"
           role="dialog"
           aria-modal="true"
           aria-label="Site navigation"
-          className={`absolute top-0 right-0 h-full w-1/2 min-w-[220px] max-w-[300px] bg-[#152128] border-l border-white/10 shadow-2xl flex flex-col transition-transform duration-300 ease-out ${
+          className={`absolute top-0 right-0 w-1/2 min-w-[220px] max-w-[300px] bg-[#152128] border-l border-b border-white/10 shadow-2xl flex flex-col rounded-bl-2xl transition-transform duration-300 ease-out ${
             isMenuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
           style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
@@ -336,9 +337,10 @@ export default function Navbar({
             </button>
           </div>
 
-          {/* Drawer Body: one scrollable list — nav links, then Adopt/Donate as
-              rows in the same list, then language + theme settings below. */}
-          <div className="flex-1 overflow-y-auto overscroll-contain px-3 py-4 flex flex-col gap-5">
+          {/* Drawer Body: one plain list, sized to its content — no scroll.
+              Nav links, then Adopt/Donate as rows in the same list, then
+              language + theme settings below. */}
+          <div className="px-3 py-4 flex flex-col gap-4">
             <nav className="flex flex-col gap-1" aria-label="Mobile Global Nav">
               {navItems.map((item) => {
                 const isActive = activeSection === item.id;
