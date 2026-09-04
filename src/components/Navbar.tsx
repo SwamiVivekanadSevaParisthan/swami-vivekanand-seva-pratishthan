@@ -108,12 +108,12 @@ export default function Navbar({
   return (
     // NOTE: the outer <header> below is intentionally NOT the element that carries
     // the show/hide translateY transform. A CSS `transform` on any ancestor of a
-    // `position: fixed` element creates a new containing block for it, so the old
-    // version (transform on <header>, drawer nested inside it) caused the mobile
-    // drawer's `fixed inset-0` to be sized against the header's own small box
-    // instead of the real viewport — that's what produced the squashed, overlapping
-    // layout on the phone. The transform now lives on an inner wrapper, and the
-    // drawer is a sibling of that wrapper, so it always covers the true viewport.
+    // `position: fixed` element creates a new containing block for it, so putting
+    // the transform on <header> (with the drawer nested inside it) caused the
+    // mobile drawer's `fixed inset-0` to be sized against the header's own small
+    // box instead of the real viewport. The transform lives on an inner wrapper,
+    // and the drawer is a sibling of that wrapper, so it always covers the true
+    // viewport regardless of screen size.
     <header
       id="main-navigation-header"
       className="fixed top-0 left-0 right-0 z-[999]"
@@ -130,7 +130,7 @@ export default function Navbar({
         }`}
       >
         <div className="w-full px-4 sm:px-6 md:px-8 xl:px-12">
-          {/* DESKTOP LAYOUT (>= 1024px) */}
+          {/* DESKTOP LAYOUT (>= 1024px) — unchanged: full nav + standalone CTA buttons */}
           <div className="hidden lg:flex items-center justify-between w-full h-[70px]">
             <button
               onClick={() => onNavigate('hero')}
@@ -275,7 +275,6 @@ export default function Navbar({
               </div>
             </button>
 
-            {/* Hamburger Trigger — icon cross-fades so it never overlaps itself */}
             <button
               ref={menuButtonRef}
               id="mobile-menu-trigger"
@@ -292,8 +291,11 @@ export default function Navbar({
         </div>
       </div>
 
-      {/* MOBILE DRAWER — sibling of the transformed top bar, so `fixed inset-0`
-          is always relative to the real viewport, not the header's own box. */}
+      {/* MOBILE DRAWER — a compact half-screen list, sibling of the transformed
+          top bar (see note above) so `fixed inset-0` always covers the true
+          viewport. Adopt/Donate are now rows inside the same list as the other
+          links, instead of large separate CTA buttons — keeps the panel to a
+          single, calm list a person can scan in one glance. */}
       <div
         className={`lg:hidden fixed inset-0 z-[1000] transition-opacity duration-300 ${
           isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
@@ -303,43 +305,40 @@ export default function Navbar({
         {/* Backdrop */}
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)} />
 
-        {/* Sliding Panel */}
+        {/* Sliding Panel — half the viewport width, with a sensible floor so it
+            never gets uncomfortably narrow on very small phones. */}
         <div
           ref={drawerRef}
           id="mobile-nav-drawer"
           role="dialog"
           aria-modal="true"
           aria-label="Site navigation"
-          className={`absolute top-0 right-0 h-full w-[86%] max-w-[360px] bg-[#152128] border-l border-white/10 shadow-2xl flex flex-col transition-transform duration-300 ease-out ${
+          className={`absolute top-0 right-0 h-full w-1/2 min-w-[220px] max-w-[300px] bg-[#152128] border-l border-white/10 shadow-2xl flex flex-col transition-transform duration-300 ease-out ${
             isMenuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
           style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
         >
           {/* Drawer Header */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 flex-shrink-0">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <img
-                src={`${import.meta.env.BASE_URL}logo.png`}
-                alt="Swami Vivekanand Seva Pratishthan Logo"
-                className="h-[36px] w-[36px] object-contain flex-shrink-0 pointer-events-none select-none"
-                referrerPolicy="no-referrer"
-              />
-              <span className="text-[12px] font-extrabold uppercase tracking-tight text-white truncate">
-                Swami Vivekanand Seva Pratishthan
-              </span>
-            </div>
+          <div className="flex items-center justify-between px-4 py-4 border-b border-white/10 flex-shrink-0">
+            <img
+              src={`${import.meta.env.BASE_URL}logo.png`}
+              alt="Swami Vivekanand Seva Pratishthan Logo"
+              className="h-[32px] w-[32px] object-contain flex-shrink-0 pointer-events-none select-none"
+              referrerPolicy="no-referrer"
+            />
             <button
               id="mobile-menu-close"
               onClick={() => setIsMenuOpen(false)}
               aria-label="Close navigation menu"
-              className="flex-shrink-0 flex items-center justify-center w-[38px] h-[38px] rounded-xl border border-white/10 bg-white/5 text-white hover:bg-white/10 active:scale-95 transition-all duration-200 cursor-pointer"
+              className="flex-shrink-0 flex items-center justify-center w-[34px] h-[34px] rounded-xl border border-white/10 bg-white/5 text-white hover:bg-white/10 active:scale-95 transition-all duration-200 cursor-pointer"
             >
-              <X size={18} />
+              <X size={16} />
             </button>
           </div>
 
-          {/* Drawer Body: scrollable nav list + settings */}
-          <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4 flex flex-col gap-6">
+          {/* Drawer Body: one scrollable list — nav links, then Adopt/Donate as
+              rows in the same list, then language + theme settings below. */}
+          <div className="flex-1 overflow-y-auto overscroll-contain px-3 py-4 flex flex-col gap-5">
             <nav className="flex flex-col gap-1" aria-label="Mobile Global Nav">
               {navItems.map((item) => {
                 const isActive = activeSection === item.id;
@@ -348,38 +347,66 @@ export default function Navbar({
                     key={item.id}
                     id={`mobnavlink-${item.id}`}
                     onClick={() => handleMobileNavigate(item.id)}
-                    className={`flex items-center justify-between text-left px-4 py-3 rounded-xl text-sm font-bold transition-all duration-200 cursor-pointer ${
+                    className={`flex items-center justify-between text-left px-3.5 py-2.5 rounded-xl text-[13px] font-bold transition-all duration-200 cursor-pointer ${
                       isActive
                         ? 'bg-amber-500 text-slate-950 font-black shadow-md'
                         : 'bg-white/5 text-white/85 hover:bg-white/10'
                     }`}
                   >
                     <span>{t(item.key)}</span>
-                    <ChevronRight size={16} className={isActive ? 'text-slate-950' : 'text-white/40'} />
+                    <ChevronRight size={14} className={isActive ? 'text-slate-950' : 'text-white/40'} />
                   </button>
                 );
               })}
+
+              {/* Divider so Adopt/Donate read as distinct actions within the list,
+                  without breaking out into their own oversized buttons. */}
+              <div className="h-px bg-white/10 my-2" />
+
+              <button
+                id="mobile-drawer-adopt-cta"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  onAdoptClick();
+                }}
+                className="flex items-center gap-2 text-left px-3.5 py-2.5 rounded-xl text-[13px] font-bold bg-[#f4b223]/12 text-[#f4b223] hover:bg-[#f4b223]/20 transition-all duration-200 cursor-pointer"
+              >
+                <FileText size={14} className="flex-shrink-0 stroke-[2.5]" />
+                <span>{t('nav_adopt')}</span>
+              </button>
+
+              <button
+                id="mobile-drawer-donate-cta"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  onDonateClick();
+                }}
+                className="flex items-center gap-2 text-left px-3.5 py-2.5 rounded-xl text-[13px] font-bold bg-[#d91f63]/12 text-[#f680ac] hover:bg-[#d91f63]/20 transition-all duration-200 cursor-pointer"
+              >
+                <Heart size={14} className="flex-shrink-0 fill-current" />
+                <span>{t('nav_donate')}</span>
+              </button>
             </nav>
 
             {/* Language Selector */}
             <div className="flex flex-col gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/40 px-1">Language</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-white/40 px-1">Language</span>
               <button
                 onClick={() => setMobileLangOpen(!mobileLangOpen)}
                 aria-expanded={mobileLangOpen}
-                className="flex items-center justify-between px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white text-sm font-bold cursor-pointer"
+                className="flex items-center justify-between px-3.5 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white text-[13px] font-bold cursor-pointer"
               >
-                <span className="flex items-center gap-2">
-                  <Globe size={15} className="text-amber-400" />
-                  {LANGUAGE_LABELS[lang]}
+                <span className="flex items-center gap-2 min-w-0">
+                  <Globe size={14} className="text-amber-400 flex-shrink-0" />
+                  <span className="truncate">{LANGUAGE_LABELS[lang]}</span>
                 </span>
                 <ChevronRight
-                  size={16}
-                  className={`text-white/40 transition-transform duration-200 ${mobileLangOpen ? 'rotate-90' : ''}`}
+                  size={14}
+                  className={`flex-shrink-0 text-white/40 transition-transform duration-200 ${mobileLangOpen ? 'rotate-90' : ''}`}
                 />
               </button>
               {mobileLangOpen && (
-                <div className="grid grid-cols-2 gap-2 mt-1">
+                <div className="grid grid-cols-2 gap-1.5 mt-1">
                   {languages.map((l) => (
                     <button
                       key={l}
@@ -387,7 +414,7 @@ export default function Navbar({
                         setLang(l);
                         setMobileLangOpen(false);
                       }}
-                      className={`px-3 py-2.5 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer ${
+                      className={`px-2 py-2 rounded-lg text-[11px] font-bold transition-all duration-150 cursor-pointer truncate ${
                         lang === l
                           ? 'bg-[#f4b223] text-slate-950'
                           : 'bg-white/5 text-white/75 hover:bg-white/10 border border-white/5'
@@ -402,43 +429,19 @@ export default function Navbar({
 
             {/* Theme Toggle */}
             <div className="flex flex-col gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/40 px-1">Appearance</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-white/40 px-1">Appearance</span>
               <button
                 onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                className="flex items-center justify-between px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white text-sm font-bold cursor-pointer"
+                className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl border border-white/10 bg-white/5 text-white text-[13px] font-bold cursor-pointer"
               >
-                <span className="flex items-center gap-2">
-                  {theme === 'light' ? <Moon size={15} className="text-[#f4b223]" /> : <Sun size={15} className="text-amber-400" />}
-                  {theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
-                </span>
+                {theme === 'light' ? (
+                  <Moon size={14} className="text-[#f4b223] flex-shrink-0" />
+                ) : (
+                  <Sun size={14} className="text-amber-400 flex-shrink-0" />
+                )}
+                <span className="truncate">{theme === 'light' ? 'Dark mode' : 'Light mode'}</span>
               </button>
             </div>
-          </div>
-
-          {/* Drawer Footer: sticky action buttons */}
-          <div className="flex-shrink-0 px-5 py-4 border-t border-white/10 flex flex-col gap-2.5">
-            <button
-              id="mobile-drawer-adopt-cta"
-              onClick={() => {
-                setIsMenuOpen(false);
-                onAdoptClick();
-              }}
-              className="flex items-center justify-center gap-2 bg-[#f4b223] hover:bg-amber-500 active:scale-[0.98] text-slate-950 text-sm font-black uppercase rounded-xl px-6 h-[46px] transition-all duration-300 shadow-md shadow-amber-950/20 cursor-pointer font-sans"
-            >
-              <FileText size={15} className="stroke-[2.5]" />
-              <span>{t('nav_adopt')}</span>
-            </button>
-            <button
-              id="mobile-drawer-donate-cta"
-              onClick={() => {
-                setIsMenuOpen(false);
-                onDonateClick();
-              }}
-              className="flex items-center justify-center gap-2 bg-[#d91f63] hover:bg-[#c01958] active:scale-[0.98] text-white text-sm font-black uppercase rounded-xl px-6 h-[46px] transition-all duration-300 shadow-md shadow-pink-950/20 cursor-pointer font-sans"
-            >
-              <Heart className="fill-white" size={15} />
-              <span>{t('nav_donate')}</span>
-            </button>
           </div>
         </div>
       </div>
