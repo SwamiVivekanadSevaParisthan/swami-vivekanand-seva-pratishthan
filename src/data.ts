@@ -134,7 +134,7 @@ export const TRANSLATIONS: Record<string, Record<Lang, string>> = {
   modal_full_name: { EN: 'Donor Full Name', HI: 'दाता का पूरा नाम', KN: 'ದಾನಿಗಳ ಪೂರ್ಣ ಹೆಸರು', MR: 'दात्याचे पूर्ण नाव' },
   modal_email: { EN: 'Email Address', HI: 'ईमेल पता', KN: 'ಇಮೇಲ್ ವಿಳಾಸ', MR: 'ईमेल पत्ता' },
   modal_country: { EN: 'Mobile Number / Country', HI: 'मोबाइल नंबर / देश', KN: 'ಮೊಬೈल ಸಂಖ್ಯೆ / ದೇಶ', MR: 'मोबाईल क्रमांक / देश' },
-  modal_tax_receipt: { EN: 'Send me tax-exemption receipt next month', HI: 'मुझे अगले महीने कर-छूट रसीद भेजें', KN: 'ಮುಂದಿನ ತಿಂಗಳು ನನಗೆ ತೆರಿಗೆ ವಿನಾಯಿತಿ ರಸೀದಿ ಕಳುಹಿಸಿ', MR: 'मला पुढील महिन्यात कर सवलत पावती पाठवा' },
+  modal_tax_receipt: { EN: 'Send me tax-exemption receipt next month', HI: 'मुझे अगले महीने कर-छूट रसीद भेजें', KN: 'ಮುಂದಿನ ತಿಂಗಳು ನನಗೆ ತೆರಿಗೆ ವಿನಾಯಿತಿ ರಸೀದಿ ಕಳುಹಿಸಿ', MR: 'मला पुढील महिन्यात कर सवलत पावती पाठवा' },
   modal_pay_method: { EN: 'Select UPI / Card / NetBanking', HI: 'यूपीआई / कार्ड / नेटबैंकिंग चुनें', KN: 'UPI / ಕಾರ್ಡ್ / ನೆಟ್ ಬ್ಯಾಂಕಿಂಗ್ ಆರಿಸಿ', MR: 'UPI / कार्ड / नेट बँकिंग निवडा' },
   modal_title: { 
     EN: 'Sponsor Healthy Meals & Child Welfare', 
@@ -169,6 +169,14 @@ export const TRANSLATIONS: Record<string, Record<Lang, string>> = {
   donate_custom_placeholder: { EN: 'Enter custom amount', HI: 'कस्टम राशि दर्ज करें', KN: 'ಕಸ್ಟಮ್ ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿ', MR: 'इतर रक्कम प्रविष्ट करा' },
   
   facebook_feed_title: { EN: 'Follow Us on Facebook', HI: 'फेसबुक पर हमें फॉलो करें', KN: 'ಫೇಸ್‌ಬುಕ್‌ನಲ್ಲಿ ನಮ್ಮನ್ನು ಅನುಸರಿಸಿ', MR: 'फेसबुकवर आमचे अनुसरण करा' },
+  facebook_feed_tagline: { EN: 'Stay Connected', HI: 'जुड़े रहें', KN: 'ಸಂಪರ್ಕದಲ್ಲಿರಿ', MR: 'संपर्कात रहा' },
+  facebook_feed_desc: { 
+    EN: 'See our latest updates, drives, and moments from the community — right here.',
+    HI: 'हमारे नवीनतम अपडेट, अभियानों और सामुदायिक पलों को यहाँ देखें।',
+    KN: 'ನಮ್ಮ ಇತ್ತೀಚಿನ ಅಪ್‌ಡೇಟ್‌ಗಳು, ಅಭಿಯಾನಗಳು ಮತ್ತು ಸಮುದಾಯದ ಕ್ಷಣಗಳನ್ನು ಇಲ್ಲಿಯೇ ನೋಡಿ.',
+    MR: 'आमचे अद्ययावत उपक्रम, मोहिमा आणि समुदायातील क्षण इथे पाहा.'
+  },
+  mastodon_feed_title: { EN: 'Follow Our Journey on Mastodon', HI: 'मास्टोडॉन पर हमारी यात्रा को फॉलो करें', KN: 'ಮ್ಯಾಸ್ಟೊಡಾನ್‌ನಲ್ಲಿ ನಮ್ಮ ಪಯಣವನ್ನು ಅನುಸರಿಸಿ', MR: 'मास्टोडॉनवर आमच्या प्रवासाला फॉलो करा' },
 
   // Newsletter Section
   newsletter_title: { 
@@ -1047,4 +1055,4 @@ export const DONATION_IMPACTS = [
     MR: 'एका मुलाच्या एका शैक्षणिक वर्षाच्या शिक्षणाला मदत करा.'
   }
   },
-]; 
+];
